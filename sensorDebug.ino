@@ -25,7 +25,10 @@ void setup() {
 }
 
 void loop() {
-	if (receiver.decode(&results))
+	detection = digitalRead(SENSOR_1);
+	
+	//if (receiver.decode(&results))
+	if (detection == LOW)
 		digitalWrite(13, HIGH);
 	digitalWrite(13, LOW);
 }
