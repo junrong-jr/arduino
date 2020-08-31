@@ -25,6 +25,7 @@ SharpIR sensor5(SENSOR_5, 1080);
 SharpIR sensor6(SENSOR_6, 1080);
 SharpIR sensor7(SENSOR_7, 1080);
 
+//RunningMedian class to calculate the median values from the sensor
 RunningMedian sensor1Values(NumOfRuns);
 RunningMedian sensor2Values(NumOfRuns);
 RunningMedian sensor3Values(NumOfRuns);
@@ -40,6 +41,7 @@ void setup() {
 
 void loop() {
   getReading();
+  getMedianReading();
 }
 
 void getReading(){
