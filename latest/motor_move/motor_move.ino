@@ -7,7 +7,7 @@ int ticks_to_move = 1500;
 
 const double Kp = 0.982, Ki = 0.5, Kd = 0.01; 
 double RPM_L = 0;                                // To Store RPM of Left Motor 
-double RPM_R = 0;                                 // To Store RPM of Right Motor 
+double RPM_R = 0;                                // To Store RPM of Right Motor 
 double PID_RPM_R = 0;
 PID myPID(&RPM_R, &PID_RPM_R, &RPM_L, Kp, Ki, Kd, DIRECT);
 
@@ -20,11 +20,13 @@ void setupPID(){
 void setupMotor(){
     motor.setSpeeds(speed_R,speed_L);
 }
+
 void forward(){
   speed_L = 250;
   speed_R = 250;
   ticks_to_move = 1200;
   motor.setSpeeds(speed_L, speed_R);
+  
   while(tick_L < ticks_to_move || tick_R < ticks_to_move ){
    GetRPM();
    myPID.Compute();
@@ -40,12 +42,29 @@ void turnright(){
   speed_R = -250;
   ticks_to_move = 1200;
   motor.setSpeeds(speed_L, speed_R);
+  
   while(tick_L < ticks_to_move || tick_R < ticks_to_move ){
    GetRPM();
    myPID.Compute();
    Er_ticks = tick_R - tick_L;
    double adjust = (Er_ticks!=0) ? (Er_ticks>0 ? 1 : -1) : 0;
    speed_L = speed_L + adjust + PID_RPM_R;
+   speed_R = speed_R - adjust; 
+  }
+}
+
+void turnleft(){
+  speed_L = -250;
+  speed_R = 250;
+  ticks_to_move = 1200;
+  motor.setSpeeds(speed_L, speed_R);
+  
+  while(tick_L < ticks_to_move || tick_R < ticks_to_move ){
+   GetRPM();
+   myPID.Compute();
+   Er_ticks = tick_R - tick_L;
+   double adjust = (Er_ticks!=0) ? (Er_ticks>0 ? 1 : -1) : 0;
+   speed_L = speed_L + adjust + (-1)*PID_RPM_R;
    speed_R = speed_R - adjust; 
   }
 }
@@ -57,6 +76,7 @@ void calibration(){
   double T_R;
   PID_RPM_R=0;
   motor.setSpeeds(speed_L, speed_R);
+  
   while(tick_R < ticks_to_move || tick_L < ticks_to_move){
     GetRPM();
     myPID.Compute();
@@ -78,21 +98,6 @@ void calibration(){
   motor.setSpeeds(0,0);
 }
 
-void turnleft(){
-  speed_L = -250;
-  speed_R = 250;
-  ticks_to_move = 1200;
-  motor.setSpeeds(speed_L, speed_R);
-  while(tick_L < ticks_to_move || tick_R < ticks_to_move ){
-   GetRPM();
-   myPID.Compute();
-   Er_ticks = tick_R - tick_L;
-   double adjust = (Er_ticks!=0) ? (Er_ticks>0 ? 1 : -1) : 0;
-   speed_L = speed_L + adjust + (-1)*PID_RPM_R;
-   speed_R = speed_R - adjust; 
-  }
-}
-
 void GetRPM(){                  
    float duration_L = pulseIn(3, HIGH); // pulseIn returns length of pulse in microseconds
    float duration_R = pulseIn(11, HIGH);
@@ -103,7 +108,6 @@ void GetRPM(){
                 
    RPM_L = ((1/duration_L)/(562/60));  //converts length of pulse to mins
    RPM_R = ((1/duration_R)/(562/60)); // formula for rpm = (counts/min) / (counts/rev)
-
 } 
 
 void initStart() {                  
@@ -116,11 +120,13 @@ void initEnd() {
   motor.setBrakes(400, 400);
   delay(20);
 }
+
 void initMove() {                             
   tick_R = 0;                                    
   tick_L = 0;  
   Er_ticks = 0;
 }
+
 void E1_ticks_increment()
 {
   tick_L ++;
