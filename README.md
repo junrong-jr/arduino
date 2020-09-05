@@ -6,3 +6,6 @@ This project on is Arduino device related scripts, for Team 31 of CZ3004 Multidi
 ## install ZsharpIR library in arduino
 * Replace the cpp file in the library folder as there are a few changes required
 * To use the library, indicate **#include <ZSharpIR.h>** at the start of the script
+
+## To Run the Robot
+Use the main script from the folder name "latest"
