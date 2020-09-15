@@ -3,11 +3,9 @@
  * Reading analog input 0 to control analog PWM output 3
  ********************************************************/
 
-// Import required libraries
 #include <EnableInterrupt.h>
 #include <PID_v1.h> 
 #include "DualVNH5019MotorShield.h"
-
 //Motor 1
 #define encoder1A 3
 #define encoder1B 5
@@ -29,7 +27,15 @@ void setup()
 }
 
 void loop()
-{  
-  calibration();
+{ 
+  delay(2500);
+//  seespeed();
+//  calibration2();
+//  delay(500);
+//  back();
+//  delay(500);
+//  turnleft();
+//  delay(500);
+  turnright();
 }
  
