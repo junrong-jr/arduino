@@ -53,14 +53,18 @@ void ZSharpIR::sort(int a[], int size) {
         if (flag) break;
     }
 }
-
+double ZSharpIR::voltage(){
+    int raw = analogRead(_irPin);
+    int voltFromRaw= map(raw ,0,1023,0,5000);
+    float v = voltFromRaw/1000.0;
+    return v;
+}
 // Read distance and compute it
-int ZSharpIR::distance() {
+double ZSharpIR::distance() {
 
     int ir_val[NB_SAMPLE];
-    int distanceMM;
-    float current;
-
+    double distanceMM;
+    double current;
 
     for (int i=0; i<NB_SAMPLE; i++){
         // Read analog value
@@ -78,20 +82,10 @@ int ZSharpIR::distance() {
 		{
         
         // Different expressions required as the Photon has 12 bit ADCs vs 10 bit for Arduinos
-          distanceMM =(int)( 277.28 * pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0, -1.2045));
+          distanceMM =( 277.28 * pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0, -1.2045));
 
 
     }   
-    else if (_model==GP2D12_24)//GP2D12_24
-		{
-        
-        // Different expressions required as the Photon has 12 bit ADCs vs 10 bit for Arduinos
-          distanceMM =(int)( 24.65251 /(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0-0.1065759));
-
-    } 
-    
-
-    
     else if (_model==20150)//GP2Y0A02YK0F
 	{
 
@@ -99,32 +93,94 @@ int ZSharpIR::distance() {
         // puntualDistance=61.573*pow(voltFromRaw/1000, -1.1068);
         
         // Different expressions required as the Photon has 12 bit ADCs vs 10 bit for Arduinos
-          distanceMM =(int)( 603.74 * pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0, -1.16));
+          distanceMM =( 603.74 * pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0, -1.16));
 
 
-    } else if (_model==430)//GP2Y0A41SK0F
-	{
+    } 
+    else if (_model==1)//sensor 1
+    {
 
-        // Different expressions required as the Photon has 12 bit ADCs vs 10 bit for Arduinos
-          distanceMM =(int)( 120.8 * pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0, -1.058));
-
-        
-    } else if (_model==100500)//GP2Y0A710K0F
-	{
-        
-
-          current = map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage);
-
-        // use the inverse number of distance like in the datasheet (1/L)
-        // y = mx + b = 137500*x + 1125 
-        // x = (y - 1125) / 137500
-        // Different expressions required as the Photon has 12 bit ADCs vs 10 bit for Arduinos
-        if (current < 1400 || current > 3300) {
-          //false data
-          distanceMM = 0;
-        } else {
-          distanceMM =(int)( 10.0 / (((current - 1125.0) / 1000.0) / 137.5));
+        //distanceMM = (4414.1 * pow(ir_val[NB_SAMPLE/2],-0.986));
+        distanceMM = (15944 * pow(ir_val[NB_SAMPLE/2],-1.209));
+        /*
+        current =(2125.4 * pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0, -0.802))/10;
+        if(current <= 230){
+            distanceMM = current;
         }
+        else{
+            distanceMM =(277.28 * pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0, -1.2045));
+        }
+        */
+    }
+    else if (_model==2)//sensor 2
+    {
+        //distanceMM = (19028 * pow(ir_val[NB_SAMPLE/2],-1.204));
+        distanceMM = (55428* pow(ir_val[NB_SAMPLE/2],-1.376));
+        /*
+        //distanceMM =(int)(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage));
+        current =(2476 * pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0, -0.734))/10;
+        if(current <= 230){
+            distanceMM = current;
+        }
+        else{
+            distanceMM =(277.28 * pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0, -1.2045));
+        } */
+    }
+    else if (_model==3)//sensor 3
+    {
+        distanceMM = (125859 * pow(ir_val[NB_SAMPLE/2],-1.539)); //85279  -1.471
+        //distanceMM = (10460 * pow(ir_val[NB_SAMPLE/2],-1.143));
+        /*
+        current =(2162.5 * pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0, -0.806))/10;
+        if(current <= 230){
+            distanceMM = current;
+        }
+        else{
+            distanceMM =(277.28 * pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0, -1.2045));
+        } */
+    }
+    else if (_model==4)//sensor 4
+    {
+        distanceMM = (10229 * pow(ir_val[NB_SAMPLE/2],-1.142));
+        //distanceMM = (2162.4* pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0,-0.878))/100; //2320.9 ^-0.895
+    }
+        else if (_model==5)//sensor 5
+    {
+
+        distanceMM = (9202.9 * pow(ir_val[NB_SAMPLE/2],-1.117));
+        //distanceMM =(2214.5* pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0,-0.894))/100;
+
+    }
+    else if (_model==6){
+        current = -0.1056 * ir_val[NB_SAMPLE/2] + 71.065;
+        if (current <=35)
+        {
+            distanceMM = current;
+        }
+        else{
+            current = (26771 * pow(ir_val[NB_SAMPLE/2],-1.14)) ;
+            if(current <=55){
+                distanceMM = current;
+            }
+            else{
+                distanceMM = -0.2803 * ir_val[NB_SAMPLE/2] + 119.22;
+            }
+        }
+         /*
+        if(current <= 50){
+            distanceMM = current;
+        }
+        else
+        {
+            distanceMM = (17252 * pow(ir_val[NB_SAMPLE/2],-1.062)); //17252 ^-1.062
+        }*/
+        
+        //distanceMM = (39131 * pow(ir_val[NB_SAMPLE/2],-1.21)); // accurate 60~80
+        //distanceMM = (17551 * pow(ir_val[NB_SAMPLE/2],-1.071));
+        //distanceMM = ((16568.54544 /(ir_val[0] + 25.35740332)) - 11); //((16724.73031 /(ir_val[0] + 25.15479286)) - 11);
+    }
+    else if (_model==7){
+        distanceMM = map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage);
     }
 
     return distanceMM;
