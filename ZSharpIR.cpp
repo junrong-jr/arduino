@@ -100,8 +100,8 @@ double ZSharpIR::distance() {
     else if (_model==1)//sensor 1
     {
 
-        //distanceMM = (4414.1 * pow(ir_val[NB_SAMPLE/2],-0.986));
-        distanceMM = (15944 * pow(ir_val[NB_SAMPLE/2],-1.209));
+        distanceMM = (8759.5* pow(ir_val[NB_SAMPLE/2],-1.099));
+        //distanceMM = (15944 * pow(ir_val[NB_SAMPLE/2],-1.209));
         /*
         current =(2125.4 * pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0, -0.802))/10;
         if(current <= 230){
@@ -114,8 +114,8 @@ double ZSharpIR::distance() {
     }
     else if (_model==2)//sensor 2
     {
-        //distanceMM = (19028 * pow(ir_val[NB_SAMPLE/2],-1.204));
-        distanceMM = (55428* pow(ir_val[NB_SAMPLE/2],-1.376));
+        distanceMM = (25275 * pow(ir_val[NB_SAMPLE/2],-1.242));
+        //distanceMM = (55428* pow(ir_val[NB_SAMPLE/2],-1.376));
         /*
         //distanceMM =(int)(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage));
         current =(2476 * pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0, -0.734))/10;
@@ -128,8 +128,8 @@ double ZSharpIR::distance() {
     }
     else if (_model==3)//sensor 3
     {
-        distanceMM = (125859 * pow(ir_val[NB_SAMPLE/2],-1.539)); //85279  -1.471
-        //distanceMM = (10460 * pow(ir_val[NB_SAMPLE/2],-1.143));
+        //distanceMM = (125859 * pow(ir_val[NB_SAMPLE/2],-1.539)); //85279  -1.471
+        distanceMM = (8263.8 * pow(ir_val[NB_SAMPLE/2],-1.091));
         /*
         current =(2162.5 * pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0, -0.806))/10;
         if(current <= 230){
