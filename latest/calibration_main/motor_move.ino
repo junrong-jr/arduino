@@ -1,4 +1,4 @@
-double speed_L = 273;
+double speed_L = 280;
 double speed_R = 301;
 double tick_L = 0;
 double tick_R = 0;
@@ -9,7 +9,7 @@ double RPM_R = 0;                                 // To Store RPM of Right Motor
 double PID_RPM_R = 0;
 double PID_RPM_L = 0;
 double setpoint_R = 100;
-double setpoint_L = 96;
+double setpoint_L = 98; //96
 //const double Kp = 0.982, Ki = 0.5, Kd = 0.01; 
 const double Kp_L = 0.12, Ki_L = 0.0, Kd_L = 0.0; //0.15
 const double Kp_R = 0.05, Ki_R = 0.0, Kd_R = 0.0; //0.05
@@ -33,22 +33,71 @@ void setupMotor(){
     motor.setSpeeds(speed_R,speed_L);
 }
 
-void seespeed(){
-  initMove();
-  motor.setSpeeds(270,270);
-  for(int i=270; i<300; i++){
-    getRPM();
-    motor.setSpeeds(i,i);
-    Serial.print(i);
-    Serial.print("\t");
-    Serial.println(RPM_L);
-    delay(200);
-  }
-}
-void moveBack(){
+void moveForward100(){
   initMove();
   pidRPM();
-  ticks_to_move = 2000;
+  ticks_to_move = 300;
+  speed_L = 100; 
+  speed_R = 100;
+  setpoint_R = 21;
+  setpoint_L = 20;
+  motor.setSpeeds(speed_L, speed_R);
+  while(tick_R < ticks_to_move || tick_L < ticks_to_move){
+    getRPM();
+    myPIDL.Compute();
+    myPIDR.Compute();
+    speed_L += PID_RPM_L;
+    speed_R += PID_RPM_R;
+    motor.setSpeeds(speed_L, speed_R);
+  }
+  initEnd();
+}
+
+void moveForward(int grid){
+  initMove();
+  pidRPM();
+  ticks_to_move = 270 * grid;
+  speed_L = 280; //275
+  speed_R = 301;
+  motor.setSpeeds(speed_L, speed_R);
+  while(tick_R < ticks_to_move || tick_L < ticks_to_move){
+    getRPM();
+    myPIDL.Compute();
+    myPIDR.Compute();
+    speed_L += PID_RPM_L;
+    speed_R += PID_RPM_R;
+    motor.setSpeeds(speed_L, speed_R);
+  }
+  delay(40);
+  initEnd();
+}
+
+void moveForward1(){
+  initMove();
+  pidRPM();
+  ticks_to_move = 1;
+  speed_L = 100; //275
+  speed_R = 100;
+  setpoint_R = 21;
+  setpoint_L = 20;
+  motor.setSpeeds(speed_L, speed_R);
+  while(tick_R < ticks_to_move || tick_L < ticks_to_move){
+    getRPM();
+    myPIDL.Compute();
+    myPIDR.Compute();
+    speed_L += PID_RPM_L;
+    speed_R += PID_RPM_R;
+    motor.setSpeeds(speed_L, speed_R);
+  }
+  initEnd();
+  setpoint_R = 100;
+  setpoint_L = 98;
+}
+
+void moveBack(int grid){
+  initMove();
+  pidRPM();
+  ticks_to_move = 270 * grid;
   speed_L = -270;
   speed_R = -300;
   motor.setSpeeds(speed_L, speed_R);
@@ -62,78 +111,24 @@ void moveBack(){
   }
   initEnd();
 }
-void calibration2(){
+
+void moveBack1(){
   initMove();
   pidRPM();
-  ticks_to_move = 2000;
-  speed_L = 273; //275
-  speed_R = 301;
-  double T_L;
-  double T_R;
+  ticks_to_move = 1;
+  speed_L = -100;
+  speed_R = -100;
   motor.setSpeeds(speed_L, speed_R);
   while(tick_R < ticks_to_move || tick_L < ticks_to_move){ //tick_R < ticks_to_move || tick_L < ticks_to_move
     getRPM();
     myPIDL.Compute();
     myPIDR.Compute();
-    speed_L += PID_RPM_L;
-    speed_R += PID_RPM_R;
-    Serial.print(RPM_L);
-    Serial.print("\t");
-    Serial.println(RPM_R);
-//    Serial.print("speed ");
-//    Serial.print(PID_RPM_L);
-//    Serial.print("\t");
-//    Serial.println(PID_RPM_R);
-    motor.setSpeeds(speed_L, speed_R);
-//    while(abs(Er_ticks = tick_R - tick_L)){
-//      GetRPM();
-//      Serial.print("In master/slave ");
-//      Serial.print("\t");
-//      Serial.print(RPM_L);
-//      Serial.print("\t");
-//      Serial.println(RPM_R);
-//      myPID.Compute();
-//      double adjust = (Er_ticks!=0) ? (Er_ticks>0 ? 1 : -1) : 0;
-//      T_L = speed_L + adjust + PID_RPM_R;
-//      T_R = speed_R - adjust;
-//      motor.setSpeeds(T_L, T_R);
-//    }
-  }
-  initEnd();
-}
-
-void calibration(){ // for align with wall
-  initMove();
-  ticks_to_move = 10;
-  motor.setSpeeds(speed_L, speed_R);
-    while(tick_R < ticks_to_move || tick_L < ticks_to_move){
-      getRPM();
-      myPIDL.Compute();
-      myPIDR.Compute();
-      speed_L += PID_RPM_L;
-      speed_R += PID_RPM_R;
-      motor.setSpeeds(speed_L, speed_R);
-  }
-  initEnd();
-}
-void moveForward(int grid){
-  initMove();
-  pidRPM();
-  ticks_to_move = 270 * grid;
-  speed_L = 273; //275
-  speed_R = 301;
-  motor.setSpeeds(speed_L, speed_R);
-  while(tick_R < ticks_to_move || tick_L < ticks_to_move){
-    getRPM();
-    myPIDL.Compute();
-    myPIDR.Compute();
-    speed_L += PID_RPM_L;
-    speed_R += PID_RPM_R;
+    speed_L -= PID_RPM_L;
+    speed_R -= PID_RPM_R;
     motor.setSpeeds(speed_L, speed_R);
   }
   initEnd();
 }
-
 void turnLeft1(){
   initMove();
   pidRPM();
@@ -173,8 +168,8 @@ void turnRight(){
   initMove();
   pidRPM();
   speed_L = 278;
-  speed_R = -300;
-  ticks_to_move = 386;
+  speed_R = -300;//386
+  ticks_to_move = 370;
   motor.setSpeeds(speed_L, speed_R);
   Serial.println("Turn Right");
   while(tick_L < ticks_to_move || tick_R < ticks_to_move ){
@@ -185,6 +180,7 @@ void turnRight(){
    speed_R -= PID_RPM_R;
    motor.setSpeeds(speed_L, speed_R);
   }
+  delay(20);
   initEnd();
 }
 void turnLeft(){
@@ -192,7 +188,7 @@ void turnLeft(){
   pidRPM();
   speed_L = -278;
   speed_R = 300;
-  ticks_to_move = 388;
+  ticks_to_move = 362;//380
   motor.setSpeeds(speed_L, speed_R);
   Serial.println("Turn Left");
   while(tick_L < ticks_to_move || tick_R < ticks_to_move ){
@@ -203,6 +199,7 @@ void turnLeft(){
    speed_R += PID_RPM_R;
    motor.setSpeeds(speed_L, speed_R);
   }
+  delay(20);
   initEnd();
 }
 
@@ -211,7 +208,7 @@ void turnRight_D(float degree){
   pidRPM();
   speed_L = 278;
   speed_R = -300;
-  ticks_to_move = (41* degree);
+  ticks_to_move = (44* degree);
   motor.setSpeeds(speed_L, speed_R);
   Serial.println("Turn Right");
   while(tick_L < ticks_to_move || tick_R < ticks_to_move ){
@@ -229,7 +226,7 @@ void turnLeft_D(float degree){
   pidRPM();
   speed_L = -278;
   speed_R = 300;
-  ticks_to_move = (41* degree);
+  ticks_to_move = (44* degree);
   motor.setSpeeds(speed_L, speed_R);
   Serial.println("Turn Left");
   while(tick_L < ticks_to_move || tick_R < ticks_to_move ){

@@ -100,8 +100,8 @@ double ZSharpIR::distance() {
     else if (_model==1)//sensor 1
     {
 
-        distanceMM = (8759.5* pow(ir_val[NB_SAMPLE/2],-1.099));
-        //distanceMM = (15944 * pow(ir_val[NB_SAMPLE/2],-1.209));
+        //distanceMM = (8759.5* pow(ir_val[NB_SAMPLE/2],-1.099));
+        distanceMM = (13351 * pow(ir_val[NB_SAMPLE/2],-1.161));
         /*
         current =(2125.4 * pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0, -0.802))/10;
         if(current <= 230){
@@ -114,8 +114,8 @@ double ZSharpIR::distance() {
     }
     else if (_model==2)//sensor 2
     {
-        distanceMM = (25275 * pow(ir_val[NB_SAMPLE/2],-1.242));
-        //distanceMM = (55428* pow(ir_val[NB_SAMPLE/2],-1.376));
+        //distanceMM = (25275 * pow(ir_val[NB_SAMPLE/2],-1.242));
+        distanceMM = (5206.1* pow(ir_val[NB_SAMPLE/2],-0.989));
         /*
         //distanceMM =(int)(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage));
         current =(2476 * pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0, -0.734))/10;
@@ -128,7 +128,7 @@ double ZSharpIR::distance() {
     }
     else if (_model==3)//sensor 3
     {
-        //distanceMM = (125859 * pow(ir_val[NB_SAMPLE/2],-1.539)); //85279  -1.471
+        //distanceMM = (8201.1 * pow(ir_val[NB_SAMPLE/2],-1.084)); //85279  -1.471
         distanceMM = (8263.8 * pow(ir_val[NB_SAMPLE/2],-1.091));
         /*
         current =(2162.5 * pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0, -0.806))/10;
@@ -141,29 +141,33 @@ double ZSharpIR::distance() {
     }
     else if (_model==4)//sensor 4
     {
-        distanceMM = (10229 * pow(ir_val[NB_SAMPLE/2],-1.142));
+        //distanceMM = (10229 * pow(ir_val[NB_SAMPLE/2],-1.142));
+        distanceMM = (11573* pow(ir_val[NB_SAMPLE/2],-1.153));
         //distanceMM = (2162.4* pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0,-0.878))/100; //2320.9 ^-0.895
     }
         else if (_model==5)//sensor 5
     {
-
-        distanceMM = (9202.9 * pow(ir_val[NB_SAMPLE/2],-1.117));
+        distanceMM = (9049 * pow(ir_val[NB_SAMPLE/2],-1.105));
+        //distanceMM = (9202.9 * pow(ir_val[NB_SAMPLE/2],-1.117));
         //distanceMM =(2214.5* pow(map(ir_val[NB_SAMPLE / 2], 0, (1<<_Adcres)-1, 0, _refVoltage)/1000.0,-0.894))/100;
 
     }
     else if (_model==6){
-        current = -0.1056 * ir_val[NB_SAMPLE/2] + 71.065;
+       //current = -0.1056 * ir_val[NB_SAMPLE/2] + 71.065;
+        current = -0.1052 * ir_val[NB_SAMPLE/2] + 71.646;
         if (current <=35)
         {
             distanceMM = current;
         }
         else{
-            current = (26771 * pow(ir_val[NB_SAMPLE/2],-1.14)) ;
-            if(current <=55){
+            //current = (26771 * pow(ir_val[NB_SAMPLE/2],-1.14));
+            current = (23995 * pow(ir_val[NB_SAMPLE/2],-1.119));
+            if(current <=60){
                 distanceMM = current;
             }
             else{
-                distanceMM = -0.2803 * ir_val[NB_SAMPLE/2] + 119.22;
+                distanceMM = (22414 * pow(ir_val[NB_SAMPLE/2],-1.106));
+               // distanceMM = -0.2803 * ir_val[NB_SAMPLE/2] + 119.22;
             }
         }
          /*

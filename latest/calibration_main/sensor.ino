@@ -35,20 +35,34 @@ void setupSensor() {
   pinMode(SENSOR_6, INPUT);
 }
 void getReading(){
-  Serial.print("Front Right sensor 1 reading: ");
-  Serial.println(sensor1.distance());
-  Serial.print("Front Mid sensor 2 reading: ");
-  Serial.println(sensor2.distance());
-  Serial.print("Front Left sensor 3 reading: ");
-  Serial.println(sensor3.distance());
-//  Serial.print("Left Front sensor 4 reading: ");
-//  Serial.println(sensor4.distance());
-//  Serial.print("Left Back sensor 5 reading: ");
-//  Serial.println(sensor5.distance());
-//  Serial.print("Right Long sensor 6 reading: ");
-//  Serial.println(sensor6.distance());
+  Serial.print("PC,AR,");
+  Serial.print(SF1_IR());
+  Serial.print(":");
+  Serial.print(SF2_IR());
+  Serial.print(":");
+  Serial.print(SF3_IR());
+  Serial.print(":");
+  Serial.print(SR4_IR());
+  Serial.print(":");
+  Serial.print(SR5_IR());
+  Serial.print(":");
+  Serial.print(SL_IR());  
 }
-
+void getReading2(){
+  Serial.println(" ");
+  Serial.print("PC,AR,");
+  Serial.print(sensor1.distance());
+  Serial.print(":");
+  Serial.print(sensor2.distance());
+  Serial.print(":");
+  Serial.print(sensor3.distance());
+  Serial.print(":");
+  Serial.print(sensor4.distance());
+  Serial.print(":");
+  Serial.print(sensor5.distance());
+  Serial.print(":");
+  Serial.println(sensor6.distance());  
+}
 double SF1(){ // sensor 1 front left
   for(int i=0; i<NumOfRuns; i++){
     sensor1Values.add(sensor1.distance());
@@ -95,39 +109,84 @@ double SL6(){ // long sensor 6 right
 }
 
 int SF1_IR(){
-  double dist = (SF1()/10);
-  if(dist > 0 && dist < 12){
+  double dist = (SF1());
+  if( dist <= 14.5){
     return 1;
   }
-  else if (dist > 10 && dist < 21){
+  else if (dist > 14.5 && dist < 25.4){
     return 2;
   }
   else{
-    return -1;
+    return 0;
   }
 }
 int SF2_IR(){
-  double dist = (SF2()/10);
-  if(dist > 0 && dist < 12){
+  double dist = (SF2());
+  if(dist <= 14.5){
     return 1;
   }
-  else if (dist > 10 && dist < 21){
+  else if (dist > 14.5 && dist < 24.5){
     return 2;
   }
   else{
-    return -1;
+    return 0;
   }
 }
 int SF3_IR(){
-  double dist = (SF3()/10);
-  if(dist > 0 && dist < 12){
+  double dist = (SF3());
+  if(dist <= 15){
     return 1;
   }
-  else if (dist > 10 && dist < 21){
+  else if ( dist < 26){
     return 2;
   }
   else{
-    return -1;
+    return 0;
+  }
+}
+int SR4_IR(){
+  double dist = (SR4());
+  if(dist <= 15){
+    return 1;
+  }
+  else if (dist > 15 && dist < 24.7){
+    return 2;
+  }
+  else{
+    return 0;
+  }
+}
+int SR5_IR(){
+  double dist = (SR5());
+  if(dist <= 15){
+    return 1;
+  }
+  else if (dist > 15 && dist < 24.7){
+    return 2;
+  }
+  else{
+    return 0;
+  }
+}
+int SL_IR(){
+  double dist = (SL6());
+  if(dist <= 18){
+    return 1;
+  }
+  else if (dist > 18 && dist <= 28){
+    return 2;
+  }
+  else if (dist > 28 && dist <= 38){
+    return 3;
+  }
+  else if(dist > 38 && dist <= 48){
+    return 4;
+  }
+  else if(dist > 48 && dist <= 58){
+    return 5;
+  }
+  else{
+    return 0;
   }
 }
 void getMedianReading(){
