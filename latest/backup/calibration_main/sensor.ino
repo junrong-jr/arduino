@@ -34,23 +34,21 @@ void setupSensor() {
   pinMode(SENSOR_5, INPUT);
   pinMode(SENSOR_6, INPUT);
 }
-void getReading(){ // reading for algo
+void getReading(){
   Serial.print("PC,AR,");
   Serial.print(SF1_IR());
-  //Serial.print(":");
+  Serial.print(":");
   Serial.print(SF2_IR());
-  //Serial.print(":");
+  Serial.print(":");
   Serial.print(SF3_IR());
-  //Serial.print(":");
+  Serial.print(":");
   Serial.print(SR4_IR());
-  //Serial.print(":");
+  Serial.print(":");
   Serial.print(SR5_IR());
-  //Serial.print(":");
-  Serial.println(SL_IR());
-
-  Serial.flush(); 
+  Serial.print(":");
+  Serial.print(SL_IR());  
 }
-void getReading2(){ // reading for myself 
+void getReading2(){
   Serial.println(" ");
   Serial.print("PC,AR,");
   Serial.print(sensor1.distance());

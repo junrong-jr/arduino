@@ -10,12 +10,17 @@ double PID_RPM_R = 0;
 double PID_RPM_L = 0;
 double setpoint_R = 100;
 double setpoint_L = 98; //96
+//const double Kp = 0.982, Ki = 0.5, Kd = 0.01; 
 const double Kp_L = 0.12, Ki_L = 0.0, Kd_L = 0.0; //0.15
 const double Kp_R = 0.05, Ki_R = 0.0, Kd_R = 0.0; //0.05
+//PID myPID(&RPM_L, &PID_RPM_L, &RPM_R, Kp, Ki, Kd, DIRECT);
 PID myPIDL(&RPM_L, &PID_RPM_L, &setpoint_L, Kp_L, Ki_L, Kd_L, DIRECT);
 PID myPIDR(&RPM_R, &PID_RPM_R, &setpoint_R, Kp_R, Ki_R, Kd_R, DIRECT);
 
 void setupPID(){
+//  myPID.SetMode(AUTOMATIC);
+//  myPID.SetOutputLimits(-350,350);
+//  myPID.SetSampleTime(10);
   myPIDL.SetMode(AUTOMATIC);
   myPIDL.SetOutputLimits(-350,350);
   myPIDL.SetSampleTime(10);
@@ -28,7 +33,27 @@ void setupMotor(){
     motor.setSpeeds(speed_R,speed_L);
 }
 
-void moveForward(int grid){ //move forward 1 grid
+void moveForward100(){
+  initMove();
+  pidRPM();
+  ticks_to_move = 300;
+  speed_L = 100; 
+  speed_R = 100;
+  setpoint_R = 21;
+  setpoint_L = 20;
+  motor.setSpeeds(speed_L, speed_R);
+  while(tick_R < ticks_to_move || tick_L < ticks_to_move){
+    getRPM();
+    myPIDL.Compute();
+    myPIDR.Compute();
+    speed_L += PID_RPM_L;
+    speed_R += PID_RPM_R;
+    motor.setSpeeds(speed_L, speed_R);
+  }
+  initEnd();
+}
+
+void moveForward(int grid){
   initMove();
   pidRPM();
   ticks_to_move = 270 * grid;
@@ -47,7 +72,7 @@ void moveForward(int grid){ //move forward 1 grid
   initEnd();
 }
 
-void moveForward1(){ //move forward 1 tick for calibration
+void moveForward1(){
   initMove();
   pidRPM();
   ticks_to_move = 1;
@@ -69,14 +94,14 @@ void moveForward1(){ //move forward 1 tick for calibration
   setpoint_L = 98;
 }
 
-void moveBack(int grid){ // move back 1 grid
+void moveBack(int grid){
   initMove();
   pidRPM();
   ticks_to_move = 270 * grid;
   speed_L = -270;
   speed_R = -300;
   motor.setSpeeds(speed_L, speed_R);
-  while(tick_R < ticks_to_move || tick_L < ticks_to_move){
+  while(tick_R < ticks_to_move || tick_L < ticks_to_move){ //tick_R < ticks_to_move || tick_L < ticks_to_move
     getRPM();
     myPIDL.Compute();
     myPIDR.Compute();
@@ -87,14 +112,14 @@ void moveBack(int grid){ // move back 1 grid
   initEnd();
 }
 
-void moveBack1(){ // move back 1 tick for calibration
+void moveBack1(){
   initMove();
   pidRPM();
   ticks_to_move = 1;
   speed_L = -100;
   speed_R = -100;
   motor.setSpeeds(speed_L, speed_R);
-  while(tick_R < ticks_to_move || tick_L < ticks_to_move){
+  while(tick_R < ticks_to_move || tick_L < ticks_to_move){ //tick_R < ticks_to_move || tick_L < ticks_to_move
     getRPM();
     myPIDL.Compute();
     myPIDR.Compute();
@@ -104,7 +129,7 @@ void moveBack1(){ // move back 1 tick for calibration
   }
   initEnd();
 }
-void turnLeft1(){ // turn left 1 tick for calibration
+void turnLeft1(){
   initMove();
   pidRPM();
   speed_L = -278;
@@ -121,7 +146,7 @@ void turnLeft1(){ // turn left 1 tick for calibration
   }
   initEnd();
 }
-void turnRight1(){ // turn right 1 tick for calibration
+void turnRight1(){
   initMove();
   pidRPM();
   speed_L = 278;
@@ -139,7 +164,7 @@ void turnRight1(){ // turn right 1 tick for calibration
   initEnd();
 }
 
-void turnRight(){ // turn right 90 degree
+void turnRight(){
   initMove();
   pidRPM();
   speed_L = 278;
@@ -158,7 +183,7 @@ void turnRight(){ // turn right 90 degree
   delay(20);
   initEnd();
 }
-void turnLeft(){ // turn left 90 degree
+void turnLeft(){
   initMove();
   pidRPM();
   speed_L = -278;
@@ -178,7 +203,7 @@ void turnLeft(){ // turn left 90 degree
   initEnd();
 }
 
-void turnRight_D(float degree){ // turn right 1 = 10 degree, 9 = 90 degreee
+void turnRight_D(float degree){
   initMove();
   pidRPM();
   speed_L = 278;
@@ -196,7 +221,7 @@ void turnRight_D(float degree){ // turn right 1 = 10 degree, 9 = 90 degreee
   }
   initEnd();
 }
-void turnLeft_D(float degree){ // turn left 1 = 10 degree, 9 = 90 degreee
+void turnLeft_D(float degree){
   initMove();
   pidRPM();
   speed_L = -278;
@@ -215,7 +240,6 @@ void turnLeft_D(float degree){ // turn left 1 = 10 degree, 9 = 90 degreee
   initEnd();
 }
 
-// methods after this is for initialise or get value
 void pidRPM(){//clear pid offset
   PID_RPM_R=0;
   PID_RPM_L=0;
@@ -262,37 +286,4 @@ void setupEncoder(){
   motor.init();
   enableInterrupt(encoder1A, E1_ticks_increment, RISING);
   enableInterrupt(encoder2A, E2_ticks_increment, RISING);
-}
-// methods after this is in beta for movement
-void slowForward(){
-  motor.setSpeeds(65, 65);
-}
-void slowBackward(){
-  motor.setSpeeds(-65, -65);
-}
-void slowRight(){
-  motor.setSpeeds(65, -65);
-}
-void slowLeft(){
-  motor.setSpeeds(-65, 65);
-}
-
-void moveForward100(){
-  initMove();
-  pidRPM();
-  ticks_to_move = 300;
-  speed_L = 100; 
-  speed_R = 100;
-  setpoint_R = 21;
-  setpoint_L = 20;
-  motor.setSpeeds(speed_L, speed_R);
-  while(tick_R < ticks_to_move || tick_L < ticks_to_move){
-    getRPM();
-    myPIDL.Compute();
-    myPIDR.Compute();
-    speed_L += PID_RPM_L;
-    speed_R += PID_RPM_R;
-    motor.setSpeeds(speed_L, speed_R);
-  }
-  initEnd();
 }
