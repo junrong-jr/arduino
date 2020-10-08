@@ -23,12 +23,6 @@ RunningMedian sensor3Values(NumOfRuns);
 RunningMedian sensor4Values(NumOfRuns);
 RunningMedian sensor5Values(NumOfRuns);
 RunningMedian sensor6Values(NumOfRuns);
-//RunningMedian S1(9);
-//RunningMedian S2(9);
-//RunningMedian S3(9);
-//RunningMedian S4(9);
-//RunningMedian S5(9);
-//RunningMedian S6(9);
 
 void setupSensor() {
   //initialize the variables we're linked to
@@ -53,28 +47,12 @@ void getReading(){ // reading for algo
   Serial.print(SR5_IR());
   //Serial.print(":");
   Serial.println(SL_IR());
+
   Serial.flush(); 
 }
-//void getReading3(){
-//  for(int i=0; i<9; i++){
-//    S1.add(SF1_IR());
-//    S2.add(SF2_IR());
-//    S3.add(SF3_IR());
-//    S4.add(SR4_IR());
-//    S5.add(SR5_IR());
-//    S6.add(SL_IR());
-//    delay(50);
-//  }
-//  Serial.print("PC,AR,");
-//  Serial.print(S1.getMedian());
-//  Serial.print(S2.getMedian());
-//  Serial.print(S3.getMedian());
-//  Serial.print(S4.getMedian());
-//  Serial.print(S5.getMedian());
-//  Serial.println(S6.getMedian());
-//}
 void getReading2(){ // reading for myself 
   Serial.println(" ");
+  Serial.print("PC,AR,");
   Serial.print(sensor1.distance());
   Serial.print(":");
   Serial.print(sensor2.distance());
@@ -134,10 +112,10 @@ double SL6(){ // long sensor 6 right
 
 int SF1_IR(){
   double dist = (SF1());
-  if( dist <= 15){
+  if( dist <= 14.5){
     return 1;
   }
-  else if (dist > 15 && dist < 25){
+  else if (dist > 14.5 && dist < 25.4){
     return 2;
   }
   else{
@@ -146,10 +124,10 @@ int SF1_IR(){
 }
 int SF2_IR(){
   double dist = (SF2());
-  if(dist <= 14.7){
+  if(dist <= 14.5){
     return 1;
   }
-  else if (dist > 14.7 && dist < 26){
+  else if (dist > 14.5 && dist < 24.5){
     return 2;
   }
   else{
@@ -161,7 +139,7 @@ int SF3_IR(){
   if(dist <= 15){
     return 1;
   }
-  else if (dist > 15 && dist < 25){
+  else if ( dist < 26){
     return 2;
   }
   else{
@@ -223,16 +201,16 @@ void getMedianReading(){
     sensor6Values.add(sensor6.distance());
   }
 
-  Serial.print("Front Right sensor 1 median reading: ");
-  Serial.println(sensor1Values.getMedian()); 
-  Serial.print("Front Mid sensor 2 median reading: "); 
-  Serial.println(sensor2Values.getMedian());  
-  Serial.print("Front Left sensor 3 median reading: ");
-  Serial.println(sensor3Values.getMedian()); 
+//  Serial.print("Front Right sensor 1 median reading: ");
+//  Serial.println(sensor1Values.getMedian()); 
+//  Serial.print("Front Mid sensor 2 median reading: "); 
+//  Serial.println(sensor2Values.getMedian());  
+//  Serial.print("Front Left sensor 3 median reading: ");
+//  Serial.println(sensor3Values.getMedian()); 
   Serial.print("Left Front sensor 4 median reading: ");
   Serial.println(sensor4Values.getMedian()); 
   Serial.print("Left Back sensor 5 median reading: ");
   Serial.println(sensor5Values.getMedian()); 
-  Serial.print("Right Long sensor 6 median reading: ");
-  Serial.println(sensor6Values.getMedian()); 
+//  Serial.print("Right Long sensor 6 median reading: ");
+//  Serial.println(sensor6Values.getMedian()); 
 }
