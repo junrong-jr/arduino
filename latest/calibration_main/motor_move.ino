@@ -31,7 +31,7 @@ void setupMotor(){
 void moveForward(int grid){ //move forward 1 grid
   initMove();
   pidRPM();
-  ticks_to_move = 248 * grid; //248 265
+  ticks_to_move = 255 * grid; //248 265
 //  setpoint_L = 60; //60
 //  setpoint_R = 60; //60
   speed_L = 200; //275 228
@@ -168,7 +168,7 @@ void turnRight(){ // turn right 90 degree
   pidRPM();
   speed_L = 278;
   speed_R = -300;//386
-  ticks_to_move = 365; //375
+  ticks_to_move = 373; //375
   motor.setSpeeds(speed_L, speed_R);
   Serial.println("Turn Right");
   while(tick_L < ticks_to_move || tick_R < ticks_to_move ){
@@ -187,7 +187,7 @@ void turnLeft(){ // turn left 90 degree
   pidRPM();
   speed_L = -278;
   speed_R = 300;
-  ticks_to_move = 365;//373
+  ticks_to_move = 373;//373
   motor.setSpeeds(speed_L, speed_R);
   Serial.println("Turn Left");
   while(tick_L < ticks_to_move || tick_R < ticks_to_move ){
