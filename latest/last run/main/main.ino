@@ -1,8 +1,3 @@
-/********************************************************
-   PID Basic Example
-   Reading analog input 0 to control analog PWM output 3
- ********************************************************/
-
 #include <EnableInterrupt.h>
 #include <PID_v1.h>
 #include "DualVNH5019MotorShield.h"
@@ -39,15 +34,13 @@ void loop()
         break;
     }
     case 't':{
-//        check = check_speed();
-//        if(check == 1){
-//          fastForward(1);
-//        }
-//        else{
-//          moveFForward(1);
-//        }
-        fastForward(1);
-//        moveBack(9);
+        check = check_speed();
+        if(check == 1){
+          fastForward(1);
+        }
+        else{
+          moveFForward(1);
+        }
         cali();
         Serial.println("PC,AR,A");
         break;
@@ -64,18 +57,6 @@ void loop()
         Serial.println("PC,AR,A");
         break;
       }
-//          case 'l': {
-//        turnLeft();
-////        cali();
-//        Serial.println("PC,AR,A");
-//        break;
-//      }
-//    case 'r': {
-//        turnRight();
-////        cali();
-//        Serial.println("PC,AR,A");
-//        break;
-//      }
     case '1': { //fastest path
 //        moveFForward(1);
         fastForward(1);
@@ -164,11 +145,10 @@ void loop()
 
 // methods after this is in beta for new movement
 
-void front_d() { //testing out new methods
+void front_d() { //move till see wall
   double dist1 = SF1();
   double dist2 = SF2();
   double dist3 = SF3();
-//dist1 <= 15 && dist2 <= 13.5 && dist3 <= 15 dist1 <= 8.3 && dist2 <= 8 && dist3 <= 8.3
     dist1 = SF1();
     dist3 = SF3();
     dist2 = SF2();
@@ -186,11 +166,11 @@ void front_d() { //testing out new methods
     }
   initEnd();
 }
-void front_d1() { //testing out new methods
+void front_d1() { //calibate front robot till 6cm away from wall
   double dist1 = SF1();
   double dist2 = SF2();
   double dist3 = SF3();
-  if (dist1 <= 17 && dist2 <= 16 && dist3 <= 17) { //dist1 <= 15 && dist2 <= 13.5 && dist3 <= 15 dist1 <= 8.3 && dist2 <= 8 && dist3 <= 8.3
+  if (dist1 <= 17 && dist2 <= 16 && dist3 <= 17) {
     dist1 = SF1();
     dist3 = SF3();
     dist2 = SF2();
@@ -213,7 +193,7 @@ void front_p1() { //calibrate robot to make sure robot is aligned with the wall
   double dist1 = SF1();
   double dist3 = SF3();
   double error = abs(dist1 - dist3);
-  while (error >= 0.3 && (dist1 <= 18 && dist3 <= 18)) { //dist1 <= 13 && dist3 <= 13 dist1 <= 7.5 && dist3 <= 7.5
+  while (error >= 0.3 && (dist1 <= 18 && dist3 <= 18)) {
     if (dist3 > dist1) {
       slowRight();
     }
@@ -265,7 +245,7 @@ void cali_s() { // calibration at start zone
   cali();
   initEnd();
 }
-void cali() {
+void cali() { //calibate for exploration
   side_p1();
   front_d1();
   front_p1();
@@ -273,7 +253,7 @@ void cali() {
   front_p1();
   side_p1();
 }
-void cali_FP() {
+void cali_FP() { //calibate fastest path
   side_p1();
   front_p1();
   front_p1();
